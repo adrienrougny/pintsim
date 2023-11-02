@@ -212,16 +212,14 @@ def check_trace(trace):
 
 def check_trace_pint(an, trace):
     pypint_an = an.to_pypint()
-    for i, state in enumerate(trace):
-        if i == 0:
-            initial_state = state
-        else:
-            reached = pypint_an.having(initial_state).reachability(state, fallback="mole")
-            if reached is False:
-                return False
-            elif reached == pypint.Inconc:
-                return pypint.Inconc
-            initial_state = state
+    initial_state = trace[0]
+    for state in trace[1:]:
+        reached = pypint_an.having(initial_state).reachability(state, fallback="mole")
+        if reached is False:
+            return False
+        elif reached == pypint.Inconc:
+            return pypint.Inconc
+        initial_state = state
     return True
 
 def trace_from_string(s):
